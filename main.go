@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -96,5 +97,10 @@ func isValidHost(host string) bool {
 			return false
 		}
 	}
+
+	if net.ParseIP(host) == nil {
+		return false
+	}
+
 	return true
 }
