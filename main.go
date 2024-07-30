@@ -1,11 +1,13 @@
 package main
 
 import (
+	"errors"
 	"net/http"
 	"net/url"
 	"os"
 	"slices"
 	"strings"
+	"unicode"
 
 	xxhash "github.com/cespare/xxhash/v2"
 	"github.com/gin-gonic/gin"
@@ -32,6 +34,7 @@ func Ping(c *gin.Context) {
 }
 
 func ShortenURL(c *gin.Context) {
+	// TODO: Make work with other types of urls, that are not using http/https
 	var request struct {
 		UrlToShorten string `json:"url_to_shorten" binding:"required"`
 		TTL          string `json:"ttl" `
@@ -42,16 +45,56 @@ func ShortenURL(c *gin.Context) {
 		return
 	}
 
-	if !strings.HasPrefix(request.UrlToShorten, "http://") &&
-		!strings.HasPrefix(request.UrlToShorten, "https://") {
-		request.UrlToShorten = "http://" + request.UrlToShorten
-	}
-
-	if _, err := url.Parse(request.UrlToShorten); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "please provide a valid url"})
+	validUrl, err := validateUrl(request.UrlToShorten)
+	if err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
 	}
 
 	xxh := xxhash.NewWithSeed(69)
-	xxh.WriteString(request.UrlToShorten)
-	hash := xxh.Sum64()
+	xxh.WriteString(validUrl)
+	hashedUrl := xxh.Sum64()
+
+	c.JSON(http.StatusCreated, gin.H{"shortened_url": hashedUrl})
+}
+
+func validateUrl(u string) (string, error) {
+	// this fixes urls being passed without a scheme
+	if !strings.HasPrefix(u, "http://") &&
+		!strings.HasPrefix(u, "https://") {
+		// prepending http, as it will work in more cases. It's the requestees job to redirect from http to https
+		u = "http://" + u
+	}
+
+	parsedURL, err := url.Parse(u)
+	if err != nil {
+		return "", errors.New("invalid URL provided")
+	}
+
+	// Check if the URL has a scheme and host
+	if parsedURL.Scheme == "" || parsedURL.Host == "" {
+		return "", errors.New("incomplete URL provided")
+	}
+
+	// Check if the host contains at least one period
+	if !strings.Contains(parsedURL.Host, ".") {
+		return "", errors.New("invalid URL host")
+	}
+
+	// Optionally, check if the host contains only valid characters
+	if !isValidHost(parsedURL.Host) {
+		return "", errors.New("invalid URL host")
+	}
+
+	return u, nil
+}
+
+// isValidHost checks if the host contains only valid characters (alphanumeric and hyphens)
+func isValidHost(host string) bool {
+	for _, r := range host {
+		if !unicode.IsLetter(r) && !unicode.IsDigit(r) && r != '.' && r != '-' {
+			return false
+		}
+	}
+	return true
 }
