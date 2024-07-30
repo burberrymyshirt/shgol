@@ -3,15 +3,14 @@ module github.com/CoolRunner-dk/shurl
 go 1.22.5
 
 require (
+	github.com/cespare/xxhash/v2 v2.3.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/joho/godotenv v1.5.1
 )
 
 require (
-	github.com/Cyan4973/xxHash v0.8.2 // indirect
 	github.com/bytedance/sonic v1.12.0 // indirect
 	github.com/bytedance/sonic/loader v0.2.0 // indirect
-	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.5 // indirect
