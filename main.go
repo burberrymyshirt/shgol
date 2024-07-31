@@ -1,10 +1,12 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"os"
 	"slices"
+	"time"
 
 	"github.com/burberrymyshirt/shurl/db"
 	"github.com/burberrymyshirt/shurl/db/repository"
@@ -45,10 +47,14 @@ func main() {
 }
 
 func ShortenURL(c *gin.Context) {
-	// NOTE: only works with http/https
 	var request struct {
 		UrlToShorten string         `json:"url_to_shorten" binding:"required"`
 		RunsOutAt    utils.NullTime `json:"runs_out_at" `
+	}
+
+	// NOTE: RunsOutAt is overwritten, as i have not decided on how to implement the ttl yet.
+	request.RunsOutAt = utils.NullTime{
+		NullTime: sql.NullTime{Time: time.Now().Add(time.Hour * 24 * 14), Valid: true},
 	}
 
 	if err := utils.BindJSON(c, &request); err != nil {
