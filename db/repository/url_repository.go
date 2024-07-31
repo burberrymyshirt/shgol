@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/CoolRunner-dk/shurl/model"
+import "github.com/burberrymyshirt/shurl/model"
 
 type UrlRepository interface {
 	CreateUrl(url string, ttl uint64) error

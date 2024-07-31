@@ -1,4 +1,4 @@
-module github.com/CoolRunner-dk/shurl
+module github.com/burberrymyshirt/shurl
 
 go 1.22.5
 

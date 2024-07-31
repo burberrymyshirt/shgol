@@ -6,8 +6,8 @@ import (
 	"os"
 	"slices"
 
-	"github.com/CoolRunner-dk/shurl/db"
-	"github.com/CoolRunner-dk/shurl/utils"
+	"github.com/burberrymyshirt/shurl/db"
+	"github.com/burberrymyshirt/shurl/utils"
 	xxhash "github.com/cespare/xxhash/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
