@@ -120,7 +120,19 @@ func ShortenURL(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"shortened_url": fullShortenedUrl})
 }
 
-// TODO: implement function
 func RedirectUrl(c *gin.Context) {
-	panic("not implemented")
+	hash, ok := c.Params.Get("path")
+	if !ok {
+		c.JSON(http.StatusNotFound, gin.H{"error": "not found"})
+		return
+	}
+
+	repo := repository.NewUrlRepository()
+	url, err := repo.GetUrlByHash(hash)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Redirect(http.StatusMovedPermanently, url.OriginalUrl)
 }

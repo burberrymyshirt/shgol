@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"errors"
 
 	"github.com/burberrymyshirt/shurl/db"
 	"github.com/burberrymyshirt/shurl/model"
@@ -26,6 +25,7 @@ func (repo *gormUrlRepository) CreateUrl(
 	runsOutAt sql.NullTime,
 ) (model.Url, error) {
 	urlModel := model.Url{
+		Hash:         hash,
 		OriginalUrl:  originalUrl,
 		ShortenedUrl: shortenedUrl,
 		RunsOutAt:    runsOutAt,
@@ -40,5 +40,6 @@ func (repo *gormUrlRepository) GetUrlByHash(hash string) (model.Url, error) {
 }
 
 func (repo *gormUrlRepository) UpdateRunsOutAtByHash(hash string, runsOutAt sql.NullTime) error {
-	return errors.New("not implemented")
+	err := repo.db.Update("runs_out_at", runsOutAt).Where("hash = ?", hash).Error
+	return err
 }
