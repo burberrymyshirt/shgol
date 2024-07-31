@@ -21,11 +21,17 @@ func main() {
 		godotenv.Load(".env.local")
 	}
 
-	db.DatabaseConnectionFactory().DatabaseInit()
+	// TODO: fix ugly database initialization, that only really works well with gorm orm
+	dbf := db.DatabaseConnectionFactory()
+	dbf.DatabaseInit()
+	dbf.DatabaseMigrator()
 
 	router := gin.Default()
 
-	router.GET("/ping", Ping) // test route
+	// test route
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "pong"})
+	})
 
 	api := router.Group("/api")
 	api.POST("/shorten", ShortenURL)
@@ -33,10 +39,6 @@ func main() {
 	router.GET("/:path", RedirectUrl)
 
 	router.Run("0.0.0.0:9090")
-}
-
-func Ping(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "pong"})
 }
 
 func ShortenURL(c *gin.Context) {

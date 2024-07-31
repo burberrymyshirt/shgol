@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/CoolRunner-dk/shurl/config"
+	"github.com/CoolRunner-dk/shurl/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -23,6 +24,7 @@ func DBConnection() *gorm.DB {
 // This  can however be extended manually, with any of the databases supported by Gorm (see https://gorm.io/docs/connecting_to_the_database.html)
 type DatabaseConnection interface {
 	DatabaseInit()
+	DatabaseMigrator()
 }
 
 // DatabaseConnectionFactory returns a database that implements the DatabaseConnection interface from the RDBMS written in the "DB_TYPE" env
@@ -62,6 +64,10 @@ func (mariadbConnection) DatabaseInit() {
 	con = db
 }
 
+func (mariadbConnection) DatabaseMigrator() {
+	con.AutoMigrate(model.Url{})
+}
+
 type sqliteConnection struct{}
 
 func (sqliteConnection) DatabaseInit() {
@@ -72,4 +78,7 @@ func (sqliteConnection) DatabaseInit() {
 		log.Fatalf("failed to connect database: %s", err.Error())
 	}
 	con = db
+}
+
+func (sqliteConnection) DatabaseMigrator() {
 }
