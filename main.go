@@ -8,9 +8,9 @@ import (
 	"slices"
 	"time"
 
-	"github.com/burberrymyshirt/shurl/db"
-	"github.com/burberrymyshirt/shurl/db/repository"
-	"github.com/burberrymyshirt/shurl/utils"
+	"github.com/burberrymyshirt/shgol/db"
+	"github.com/burberrymyshirt/shgol/db/repository"
+	"github.com/burberrymyshirt/shgol/utils"
 	xxhash "github.com/cespare/xxhash/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"

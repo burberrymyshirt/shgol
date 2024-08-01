@@ -1,4 +1,4 @@
-module github.com/burberrymyshirt/shurl
+module github.com/burberrymyshirt/shgol
 
 go 1.22.5
 

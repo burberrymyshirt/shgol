@@ -3,7 +3,7 @@ package repository
 import (
 	"database/sql"
 
-	"github.com/burberrymyshirt/shurl/model"
+	"github.com/burberrymyshirt/shgol/model"
 )
 
 type UrlRepository interface {

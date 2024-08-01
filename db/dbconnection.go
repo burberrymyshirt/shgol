@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/burberrymyshirt/shurl/config"
-	"github.com/burberrymyshirt/shurl/model"
+	"github.com/burberrymyshirt/shgol/config"
+	"github.com/burberrymyshirt/shgol/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
