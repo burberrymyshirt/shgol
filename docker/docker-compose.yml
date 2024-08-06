@@ -1,0 +1,19 @@
+services:
+  valkey:
+    container_name: valkey
+    hostname: valkey
+    image: valkey/valkey:latest
+    volumes:
+      - ./conf/valkey.conf:/etc/valkey/valkey.conf
+      - ./data:/data
+    command: valkey-server /etc/valkey/valkey.conf
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    ports:
+      - 6379:6379
+    environment:
+      - VALKEY_PASSWORD=root
+      - VALKEY_DATABASE=1
