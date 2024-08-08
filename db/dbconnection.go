@@ -81,4 +81,5 @@ func (sqliteConnection) DatabaseInit() {
 }
 
 func (sqliteConnection) DatabaseMigrator() {
+	con.AutoMigrate(model.Url{})
 }
